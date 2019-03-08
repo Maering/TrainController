@@ -1,19 +1,4 @@
-class Singleton:
-    """ https://gist.github.com/pazdera/1098129 """
-    __instance = None
-    @staticmethod 
-    def getInstance():
-        """ Static access method. """
-        if Singleton.__instance == None:
-            Singleton()
-        return Singleton.__instance
-    def __init__(self):
-        """ Virtually private constructor. """
-        if Singleton.__instance != None:
-            raise Exception("This class is a singleton!")
-        else:
-            Singleton.__instance = self
-
+import serial
 
 # The factory settings configure the Intellibox for an IBM compatible PC and for using only the syntax of the Märklin 6050/6051 Interface.
 #      * The default Intellibox serial interface settings are: 
@@ -25,13 +10,25 @@ class Singleton:
 #      * DTR line not used.
 #      * -------------------------------------------
 #      * More information (french) : http://www.espacerails.com/modelisme/article-44-intellibox--le-protocole-p50x.html
+class SerialHandler:
+    """ https://gist.github.com/pazdera/1098129 """
+    __instance = None
+    @staticmethod 
+    def getInstance():
+        """ Static access method. """
+        if SerialHandler.__instance == None:
+            SerialHandler()
+        return SerialHandler.__instance
 
-import serial
-from .order import Order
-class SerialHandler(Singleton):
-    def __init__(self, address):
-        self.port = serial.Serial()
-
+    def __init__(self):
+        """ Virtually private constructor. """
+        if SerialHandler.__instance != None:
+            raise Exception("This class is a singleton!")
+        else:
+            SerialHandler.__instance = self
+            self.port = serial.Serial()        
+    
+    def connect(self, address):
         # Configure port
         self.port.port = address
         self.port.baudrate = 2400
@@ -41,11 +38,9 @@ class SerialHandler(Singleton):
         # Open port
         self.port.open()
 
-    def send(self, order):
+    def send(self, __bytes):
         if self.port.isOpen():
-            self.port.write(order.instruction)
-            for param in order.params:
-                self.port.write(param)
+            self.port.write(__bytes)
         else:
             raise IOError
 
