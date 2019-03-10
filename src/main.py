@@ -1,27 +1,14 @@
-from serialHandler import SerialHandler
-from train import Train
-from Orders.orders import P50XUpdateLok
-#  MAIN 
-#serialHandler = SerialHandler.getInstance()
-#serialHandler.connect('ttyS0')
+from trainController import TrainController
 
-if __name__ == '__main__':
-    t = Train('LokTest', 12)
+# init
+user_input = 'help'
+tc = TrainController()
 
-    print(t)
-    print(t.speed)
-    t.setSpeed(64)
-    print(t.speed)
-    print(t.parameters)
-
-    o = P50XUpdateLok(t)
-    print(o)
-
-    t.toggleLights()
-    o = P50XUpdateLok(t)
-    print(o)
-
-    t.toggleF1()
-    o = P50XUpdateLok(t)
-    print(o)
-
+# program
+while user_input is not 'exit' :
+    try:
+        user_input = input("Listening to command (space as separator between args): ")
+        command, *args = user_input.split()
+        tc.process(command, args)
+    except:
+        print("Something went wrong, please try again or type : help")

@@ -1,4 +1,4 @@
-from serialHandler import SerialHandler
+from IO.serialHandler import SerialHandler
 
 class P50XOrder:
     def __init__(self, action, *params):
@@ -18,7 +18,6 @@ class P50XOrder:
         __params = ', '.join(self.params)
         return __string + __params + ']'
         
-
 class P50XUpdateLok(P50XOrder):
     def __init__(self, train):
         super().__init__(80, train.address_less_significant, train.address_most_significant, train.speed, train.parameters)

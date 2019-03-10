@@ -1,4 +1,4 @@
-from src.train import Train
+from src.Trains.train import Train
 from src.Orders.orders import P50XUpdateLok
 
 def test_train_init():

@@ -1,6 +1,26 @@
 from bitarray import bitarray
+from Orders.orders import P50XUpdateLok
 
 class Train:
+
+    SPEEDS = []
+    SPEEDS.insert(0, 0)  
+    SPEEDS.insert(1, 1)
+    SPEEDS.insert(2, 2)
+    SPEEDS.insert(3, 10)
+    SPEEDS.insert(4, 19)
+    SPEEDS.insert(5, 29)
+    SPEEDS.insert(6, 38)
+    SPEEDS.insert(7, 48)
+    SPEEDS.insert(8, 57)
+    SPEEDS.insert(9, 67)
+    SPEEDS.insert(10, 76)
+    SPEEDS.insert(11, 86)
+    SPEEDS.insert(12, 95)
+    SPEEDS.insert(13, 105)
+    SPEEDS.insert(14, 114)
+    SPEEDS.insert(15, 127)
+
     def __init__(self, name, lokAddress):
         ''' By default the train will have his speed set to 0, going forward and everything turned off '''
         self.name = name
@@ -17,7 +37,9 @@ class Train:
             self.address_most_significant = address[2:] or '0' # high part
 
         # Send as one byte
-        self.setSpeed(0) # range from 0 to 127
+        self.speed = 0
+        self.speed_index = 0
+        self.__setSpeed__(0) # range from 0 to 127
 
         # Send as one byte, each parameters is a bit
         self.lights = False
@@ -32,11 +54,23 @@ class Train:
     #################
     ###  SETTERS  ###
     #################
-    def setSpeed(self, value):
+    def __setSpeed__(self, value):
         if value < 0 or value > 127:
             raise Exception
         else:
             self.speed = hex(value)[2:]
+
+    def __increaseSpeed__(self):
+        next_index = self.speed_index + 1
+        if next_index <= 15:
+            self.speed_index = next_index
+            self.__setSpeed__(Train.SPEEDS[self.speed_index])
+
+    def __decreaseSpeed__(self):
+        next_index = self.speed_index - 1
+        if next_index >= 0:
+            self.speed_index = next_index
+            self.__setSpeed__(Train.SPEEDS[self.speed_index])
 
     #################
     ###  GETTERS  ###
@@ -68,32 +102,43 @@ class Train:
     ### FUNCTIONS ###
     #################
 
+    def update(self):
+        order = P50XUpdateLok(self)
+        order.execute()
+
     def reverse(self):
-        pass
+        self.__setSpeed__(0)
+        self.speed_index = 0
+        self.forward = not self.forward
+        self.update()
 
     def increaseSpeed(self):
-        pass
+        self.__increaseSpeed__()
+        self.update()
 
     def decreaseSpeed(self):
-        pass
+        self.__increaseSpeed__()
+        self.update()
 
     def toggleLights(self):
         self.lights = not self.lights
+        self.update()
 
     def toggleF1(self):
         self.f1 = not self.f1
+        self.update()
 
     def toggleF2(self):
         self.f2 = not self.f2
+        self.update()
 
     def toggleF3(self):
         self.f3 = not self.f3
+        self.update()
 
     def toggleF4(self):
         self.f4 = not self.f4
-
-    def __send__(self, order):
-        pass
+        self.update()
     
     def __str__(self):
         __string = []
