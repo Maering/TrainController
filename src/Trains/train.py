@@ -1,5 +1,5 @@
 from bitarray import bitarray
-from Orders.orders import P50XUpdateLok
+from orders import P50XOrder
 
 class Train:
 

@@ -1,5 +1,5 @@
-from src.Trains.train import Train
-from src.Orders.orders import P50XUpdateLok
+from train import Train
+from orders import P50XUpdateLok
 
 def test_train_init():
     t = Train('LokTest', 12)
@@ -10,8 +10,8 @@ def test_train_init():
     assert t.parameters == 'c0'
 
     # Change speed
-    t.setSpeed(64)
-    assert t.speed == 40
+    t.increaseSpeed()
+    assert t.speed == 1
 
     # Toggle lights
     t.toggleLights()
@@ -24,18 +24,9 @@ def test_train_init():
 def test_train_speed_change_to_64():
     t = Train('LokTest', 12)
     assert t.speed == 0
-    t.setSpeed(64)
-    assert t.speed == 40
-    return True
-
-def test_train_speed_change_to_128():
-    ''' must fail '''
-    t = Train('LokTest', 12)
-    assert t.speed == 0
-    t.setSpeed(128)
-    assert t.speed == 0
+    t.increaseSpeed()
+    assert t.speed == 1
     return True
 
 print(test_train_init())
 print(test_train_speed_change_to_64())
-print(test_train_speed_change_to_128())

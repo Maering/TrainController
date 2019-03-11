@@ -1,4 +1,4 @@
-from Trains.train import Train
+from train import Train
 
 class TrainController:
 
@@ -86,21 +86,29 @@ class TrainController:
 
         elif command == 'off':
             '''
-            turns off the system
+            Turns off the system
             '''
             pass
 
         elif command == 'on':
             '''
-            turns on the system
+            Turns on the system
             '''
             pass
+
+        elif command == 'quit':
+            '''
+            Exit the program
+            '''
+            return False
 
         else:
             '''
             unkwown command, show help
             '''
             self.__help__()
+        
+        return True
 
     def __help__(self):
         ''' help of the function '''
