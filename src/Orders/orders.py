@@ -1,4 +1,4 @@
-from serialHandler import SerialHandler
+from IO.serialHandler import SerialHandler
 
 class P50XOrder:
     def __init__(self, action, *params):

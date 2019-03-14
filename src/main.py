@@ -1,5 +1,5 @@
 from trainController import TrainController
-
+from Tests.test_orders import *
 # init
 user_input = 'help'
 tc = TrainController()
