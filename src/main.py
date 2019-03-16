@@ -8,7 +8,9 @@ b = True
 while b:
     try:
         user_input = input("Listening to command (space as separator between args): ")
-        command, *args = user_input.split()
+        temp = user_input.split()
+        command = temp[0]
+        args = temp [1:]
         b = tc.process(command, args)
     except:
         print("Something went wrong, please try again or type : help")
