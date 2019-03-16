@@ -1,5 +1,5 @@
-from train import Train
-from orders import P50XUpdateLok
+from Trains.train import Train
+from Orders.orders import P50XUpdateLok
 
 def test_train_init():
     t = Train('LokTest', 12)

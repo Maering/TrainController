@@ -1,4 +1,4 @@
-from train import Train
+from Trains.train import Train
 
 class TrainController:
 
