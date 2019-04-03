@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}My trains{% endblock %}
+
+{% block content %}
+    <div style="padding:30px">
+        <div class="card">
+            <div class="card-header">
+                <div class="float-left">
+                    <h2>My trains</h2>
+                </div>
+                <div class="float-right">
+                    <a class="btn btn-lg btn-outline-secondary" href="{% url 'trains.new' %}">
+                        New Train
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">        
+                <div class="card-text">
+                    {% if trains is None %}
+                        <p>
+                            <lead>No train found !</lead>
+                        </p>
+                    {% else %}
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">LokID</th>
+                                    <th scope="col">Link</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for train in trains %}
+                                    <tr>
+                                        <td>{{ train.name }}</td>
+                                        <td>{{ train.lokid }}</td>
+                                        <td><a class="btn btn-secondary" href="/train/show/{{ train.id }}">Go !</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

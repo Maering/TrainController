@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Command {{ command.name }}{% endblock %}
+
+{% block content %}
+    <div style="padding:30px">
+        <div class="card">
+            <div class="card-header">
+                <h2>{{ command.name }}</h2>
+            </div>
+            <div class="card-body">        
+                <div class="card-text">
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label col-form-label-lg">P50xa</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control form-control-lg" name="p50xa" value="{{ command.p50xa }}"required readonly/>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label col-form-label-lg">P50xb</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control form-control-lg" name="p50xb" value="{{ command.p50xb }}"required readonly/>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label col-form-label-lg">Description</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control form-control-lg" name="description" value="{{ command.description }}"required readonly/>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            {% if command.hasparams %}
+                <div class="card-footer">
+                    <small>
+                        <p>
+                            As usual, the syntax of P50Xa cmds is shown using these 'meta-symbols':
+                        </p>
+                        <table class="table card-text">
+                            <tbody>
+                                <tr>
+                                    <td><strong>[]</strong></td>
+                                    <td>tell an optional parameter or parameter plus separators, etc</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>{}</strong></td>
+                                    <td>tell a non optional part of the command, which may contain optional parts</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>|</strong></td>
+                                    <td>tells that two or more possibilities exists: those shown beforeand after this symbol</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </small>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

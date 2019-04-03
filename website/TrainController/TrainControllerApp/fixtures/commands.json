@@ -1,0 +1,35 @@
+[
+    {
+        "model": "TrainControllerApp.Command",
+        "pk": 1,
+        "fields": {
+            "name" : "P50XNope",
+            "p50xa": "xNOP",
+            "p50xb": "C4",
+            "description": "Ask intellibox if it is ok",
+            "hasparams": false
+        }
+    },
+    {
+        "model": "TrainControllerApp.Command",
+        "pk": 2,
+        "fields": {
+            "name" : "P50XTurnOn",
+            "p50xa": "xGo",
+            "p50xb": "A7",
+            "description": "Turns on the intellibox",
+            "hasparams": false
+        }
+    },
+    {
+        "model": "TrainControllerApp.Command",
+        "pk": 3,
+        "fields": {
+            "name" : "P50XTurnOff",
+            "p50xa": "xStop",
+            "p50xb": "A6",
+            "description": "Turns off the intellibox",
+            "hasparams": false
+        }
+    }
+]

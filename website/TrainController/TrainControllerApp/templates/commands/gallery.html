@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Commands{% endblock %}
+
+{% block content %}
+    <div style="padding:30px">
+        <div class="card">
+            <div class="card-header">
+                <h2>Commands</h2>
+            </div>
+            <div class="card-body">        
+                <div class="card-text">
+                    {% if commands is None %}
+                        <p>
+                            <lead>No command found !</lead>
+                        </p>
+                    {% else %}
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">P50Xa</th>
+                                    <th scope="col">P50Xb</th>
+                                    <th scope="col">Description</th>
+                                    <th scope="col">Parameters ?</th>
+                                    <th scope="col">Link</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for command in commands %}
+                                    <tr>
+                                        <td>{{ command.name }}</td>
+                                        <td>{{ command.p50xa }}</td>
+                                        <td>{{ command.p50xb }}</td>
+                                        <td>{{ command.description }}</td>
+                                        <td>{{ command.hasparams }}</td>
+                                        <td><a class="btn btn-secondary" href="/command/show/{{ command.id }}">Go !</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
