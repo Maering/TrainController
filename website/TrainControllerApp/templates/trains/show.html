@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Train {{ train.name }}{% endblock %}
+
+{% block content %}
+    <div style="padding:30px">
+        <div class="card">
+            <div class="card-header">
+                <h2>{{ train.name }}</h2>
+            </div>
+            <div class="card-body">        
+                <div class="card-text">
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label col-form-label-lg">LokID</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control form-control-lg" name="train_lokid" value="{{ train.lokid }}"required readonly/>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            <!-- picture of the train -->
+        </div>
+    </div>
+{% endblock %}

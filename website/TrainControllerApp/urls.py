@@ -27,6 +27,7 @@ urlpatterns = [
     path('command/show/<command_id>', views.command_show, name='commands.show'),
 
     # Control panel
+    path('controls/panel', views.control_panel, name='controls.panel'),
     # TODO: direct control of the train
     
 

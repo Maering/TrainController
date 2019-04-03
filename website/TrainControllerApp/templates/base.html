@@ -76,25 +76,33 @@
                     <li>
                         {% if user.is_authenticated %}
                             <a href="{% url 'dashboard' %}">
-                                <i class="fas fa-briefcase"></i>
+                                <i class="fas fa-tachometer-alt"></i>
                                 Dashboard
                             </a>
+
+                            <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                                <i class="fas fa-train"></i>
+                                Trains
+                            </a>
+            
+                            <ul class="collapse list-unstyled" id="pageSubmenu">
+                                <li>
+                                    <a href="{% url 'trains.new' %}">New train</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'trains.gallery' %}">My trains</a>
+                                </li>
+                            </ul>
+
+                            <a href="{% url 'commands.gallery' %}">
+                                <i class="fas fa-bookmark"></i>
+                                Commands
+                            </a>
+
                         {% endif %}
-                        <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                            <i class="fas fa-train"></i>
-                            Trains
-                        </a>
-        
-                        <ul class="collapse list-unstyled" id="pageSubmenu">
-                            <li>
-                                <a href="{% url 'trains.new' %}">New train</a>
-                            </li>
-                            <li>
-                                <a href="{% url 'trains.gallery' %}">My trains</a>
-                            </li>
-                        </ul>
+                        
                         <a href="{% url 'about' %}">
-                            <i class="fas fa-briefcase"></i>
+                            <i class="fas fa-question-circle"></i>
                             About
                         </a>
                     </li>

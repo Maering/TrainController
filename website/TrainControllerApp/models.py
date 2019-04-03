@@ -1,7 +1,7 @@
 from django.db import models
+from django.contrib import auth
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 
 # ---------------------------------- #
 # ------------ Hardware ------------ #
@@ -22,6 +22,7 @@ class Train(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100, unique=True)
     lokid = models.PositiveSmallIntegerField(unique=True) # 0 to 32767
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='user', null=True)
     # TODO: parameters are handled at runtime (speed, direction, light, functions, etc...)
 
 class Command(models.Model):
@@ -35,18 +36,10 @@ class Command(models.Model):
     # TODO: parameters are handled at runtime 
     # TODO: handle return off the command
 
-# ----------------------------------------- #
-# ------------ User extensions ------------ #
-# ----------------------------------------- #
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    trains = models.ManyToManyField(Train, related_name='trains')
+# ------------------------------------ #
+# ------------ Extensions ------------ #
+# ------------------------------------ #
+def trains(self):
+    return Train.objects.filter(user=self)
+auth.models.User.add_to_class('trains', trains)
 
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        Profile.objects.create(user=instance)
-
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    instance.profile.save()
