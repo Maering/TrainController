@@ -9,7 +9,13 @@ def home(request):
     return render(request, 'home.html', context)
 
 def dashboard(request):
-    pass
+    if request.user.is_authenticated:
+        context = {}
+        context['trains'] = request.user.trains()
+        return render(request, 'dashboard.html', context)
+    else:
+        messages.error(request, "Login first !")
+        return redirect('/')
 
 def about(request):
     context = {}
@@ -25,7 +31,7 @@ def train_new(request):
         return render(request, 'trains/newedit.html', context)
     else:
         messages.error(request, "Login first !")
-        return redirect('')
+        return redirect('/')
 
 def train_register(request):
     ''' Register a new train '''
@@ -54,7 +60,7 @@ def train_register(request):
         return redirect('trains.gallery')
     else:
         messages.error(request, "Login first !")
-        return redirect('')
+        return redirect('/')
 
 def train_edit(request, train_id):
     ''' display a form allowing user to edit a train '''
@@ -65,10 +71,10 @@ def train_edit(request, train_id):
             return render(request, 'trains/newedit.html', context)
         else:
             messages.error(request, "Invalid train id !")
-            return redirect('')
+            return redirect('/')
     else:
         messages.error(request, "Login first !")
-        return redirect('')
+        return redirect('/')
 
 def train_update(request, train_id):
     if request.method == 'POST' and request.user.is_authenticated:
@@ -100,7 +106,7 @@ def train_update(request, train_id):
         return redirect('trains.gallery')
     else:
         messages.error(request, "Login first !")
-        return redirect('')
+        return redirect('/')
 
 
 def train_delete(request, train_id):
@@ -114,7 +120,7 @@ def train_gallery(request):
         return render(request, 'trains/gallery.html', context)
     else:
         messages.error(request, "Login first !")
-        return redirect('')
+        return redirect('/')
 
 def train_show(request, train_id):
     ''' display user's train '''
@@ -129,7 +135,7 @@ def train_show(request, train_id):
 
     else:
         messages.error(request, "Login first !")
-        return redirect('')
+        return redirect('/')
     pass
 
 # ---------------------------------- #
@@ -150,7 +156,7 @@ def command_show(request, command_id):
         return render(request, 'commands/show.html', context)
     else:
         messages.error(request, "Invalid command id !")
-        return redirect('')
+        return redirect('/')
 
 # --------------------------------------- #
 # ------------ Control Panel ------------ #
@@ -164,7 +170,7 @@ def control_panel(request):
         return render(request, 'panels/control.html', context)
     else:
         messages.error(request, "Login first !")
-        return redirect('')
+        return redirect('/')
 
 def control_train(request, train_id, command_id):
     if request.user.is_authenticated:
@@ -175,5 +181,5 @@ def control_train(request, train_id, command_id):
         pass
     else:
         messages.error(request, "Login first !")
-        return redirect('')
+        return redirect('/')
 

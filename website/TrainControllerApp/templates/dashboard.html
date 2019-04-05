@@ -1,0 +1,179 @@
+<!-- templates/home.html -->
+{% extends 'base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+
+    {% if user.is_authenticated %}
+        <div class="jumbotron" style="overflow-y: hidden">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-3 h-50 mw-100">
+                        <ul class="nav nav-pills nav-stacked d-block scrollbar-embedded border border-secondary rounded">
+                            <li class="nav-item ">
+                                <a class="nav-link active" href="#">Active</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Link</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Link</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Link</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Link</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Link</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Link</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Link</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Link</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Link</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Link</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link disabled" href="#">Disabled</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-sm-6 h-50 mw-100">
+                        <textarea class="form-control mw-100 border border-secondary rounded" name="output_commands">
+
+                        </textarea>
+                    </div>
+                    <div class="col-sm-3 h-50 mw-100">
+                        <ul class="nav nav-pills nav-stacked d-block scrollbar-embedded border border-secondary rounded">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="#">Active</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Link</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Link</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Link</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Link</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Link</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Link</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Link</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Link</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Link</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Link</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link disabled" href="#">Disabled</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-9">
+                    {% if trains is None %}
+                        <p>
+                            <lead>No train found !</lead>
+                        </p>
+                    {% else %}
+                    <div class="table-responsive mw-100">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">LokID</th>
+                                    <th scope="col" colspan="8">Actions</th>
+                                    <th scope="col">Link</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for train in trains %}
+                                    <tr>
+                                        <td>{{ train.name }}</td>
+                                        <td>{{ train.lokid }}</td>
+                                        <td>
+                                            <button type="button" class="btn btn-lg" aria-label="Accelerate">
+                                                <span class="fa fa-trash-o fa-lg" aria-hidden="true"></span>
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-lg" aria-label="Accelerate">
+                                                <span class="fa fa-trash-o fa-lg" aria-hidden="true"></span>
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-lg" aria-label="Accelerate">
+                                                <span class="fa fa-arrows-alt-h fa-lg" aria-hidden="true"></span>
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-lg" aria-label="Accelerate">
+                                                <span class="fa fa-trash-o fa-lg" aria-hidden="true"></span>
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-lg" aria-label="Accelerate">
+                                                <span class="fa fa-trash-o fa-lg" aria-hidden="true"></span>
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-lg" aria-label="Accelerate">
+                                                <span class="fa fa-trash-o fa-lg" aria-hidden="true"></span>
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-lg" aria-label="Accelerate">
+                                                <span class="fa fa-trash-o fa-lg" aria-hidden="true"></span>
+                                            </button>
+                                        </td>
+
+                                        
+                                        <td><a class="btn btn-secondary" href="/train/show/{{ train.id }}">Go !</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="col-md-3 d-flex flex-column justify-content-center">
+                    <div class="row p-2">
+                        <input type="button" class="btn-xl btn-circle btn-go" value="Go!"/>
+                    </div>
+                    <div class="row p-2">
+                        <input type="button" class="btn-xl btn-circle btn-stop" value="Stop!"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

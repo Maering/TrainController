@@ -17,3 +17,38 @@ html, body, main {
 #sidebar {
     min-height: 100vh;
 }
+
+.scrollbar-embedded {
+    border: 1px;
+    max-height: 10em; 
+    overflow-y: scroll;
+}
+
+/* from : https://codepen.io/jnbruno/pen/vNpPpW */
+.btn-circle {
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+    font-size: 12px;
+    line-height: 1.42857;
+}
+
+.btn-circle.btn-xl {
+    width: 70px;
+    height: 70px;
+    border-radius: 35px;
+    font-size: 18px;
+    line-height: 1.33;
+}
+
+.btn-go {
+    border: 5px solid rgb(9, 190, 9);
+    background-color: rgb(36, 238, 10);
+    -webkit-text-fill-color: #f8f8f8;
+}
+
+.btn-stop {
+    border: 5px solid rgb(190, 9, 9);
+    background-color: rgb(238, 36, 10);
+    -webkit-text-fill-color: #f8f8f8;
+}
