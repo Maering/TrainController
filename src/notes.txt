@@ -1,4 +1,0 @@
-Se placer dans src puis taper
-> python -m Tests.test_orders
-
-Python ne peut pas remonter plus haut que le dossier depuis lequel est lancé le script

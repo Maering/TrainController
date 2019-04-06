@@ -1,7 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+from django.http import HttpResponse, HttpResponseBadRequest
 from .models import Command, Train
 import re
+from .business import Controller
+
+# Init controller (ugly way to do it)
+controller = Controller()
 
 # Create your views here.
 def home(request):
@@ -161,7 +166,6 @@ def command_show(request, command_id):
 # --------------------------------------- #
 # ------------ Control Panel ------------ #
 # --------------------------------------- #
-
 def control_panel(request):
     if request.user.is_authenticated:
         context = {}
@@ -172,13 +176,40 @@ def control_panel(request):
         messages.error(request, "Login first !")
         return redirect('/')
 
-def control_train(request, train_id, command_id):
-    if request.user.is_authenticated:
-        context = {}
+def control_process(request):
+    import json
 
-        # TODO: Fetch parameters
+    if request.user.is_authenticated and request.method == 'POST':
+        #try:
 
-        pass
+        # Fetch JSON
+        data = request.POST.get('json')
+        data = json.loads(data)
+
+        # Validate action
+        action = data.get('action')
+        if not re.match('^[a-z]+$', action):
+            messages.error(request, "Invalid train_id !")
+            return HttpResponseBadRequest("Bad command provided")
+
+        # Get args
+        args = data.get('args')
+
+        # Validate train_id
+        train_id = args.get('id')
+        if train_id is not None and not re.match('^[0-9]{4}$', train_id):
+            messages.error(request, "Invalid train_id !")
+            return HttpResponseBadRequest("Bad command provided")
+        
+        # Process action
+        controller.process(action, args)
+
+        # Read from Intellibox
+        return HttpResponse(controller.readResponse())
+            
+        # except:
+        #     messages.error(request, "An error occured while processing command !")
+        #     return HttpResponseBadRequest("Something went wrong !")
     else:
         messages.error(request, "Login first !")
         return redirect('/')

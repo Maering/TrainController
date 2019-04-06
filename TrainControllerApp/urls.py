@@ -16,11 +16,11 @@ urlpatterns = [
     # Trains
     path('train/new', views.train_new, name='trains.new'),
     path('train/register', views.train_register, name='trains.register'),
-    path('train/edit/<train_id>', views.train_edit, name='trains.edit'),
-    path('train/update/<train_id>', views.train_update, name='trains.update'),
-    path('train/delete/<train_id>', views.train_delete, name='trains.delete'),
+    path('train/<train_id>/edit', views.train_edit, name='trains.edit'),
+    path('train/<train_id>/update', views.train_update, name='trains.update'),
+    path('train/<train_id>/delete', views.train_delete, name='trains.delete'),
+    path('train/<train_id>/show', views.train_show, name='trains.show'),
     path('train/gallery', views.train_gallery, name='trains.gallery'),
-    path('train/show/<train_id>', views.train_show, name='trains.show'),
 
     # Commands
     path('command/gallery', views.command_gallery, name='commands.gallery'),
@@ -28,6 +28,7 @@ urlpatterns = [
 
     # Control panel
     path('controls/panel', views.control_panel, name='controls.panel'),
+    path('controls/process', views.control_process, name='controls.process')
     # TODO: direct control of the train
     
 

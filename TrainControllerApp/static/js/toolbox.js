@@ -1,21 +1,3 @@
-class BanlistTools {
-
-    static alter(gameprofile_id, char_id)
-    {
-        $.ajax({
-            type: 'POST',
-            url : "/dashboard/gameprofiles/" + gameprofile_id + "/characters/" + char_id + "/alter",
-            headers: {
-                'X-CSRFToken': Toolbox.getCookie('csrftoken')
-                // csrftoken 
-            },
-            success : function (data) {
-                console.log('ok');
-            }
-        });
-    }
-}
-
 class Toolbox
 {
     // This snippet is provided in Django official documentation

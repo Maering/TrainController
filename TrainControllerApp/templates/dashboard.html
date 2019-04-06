@@ -3,9 +3,20 @@
 
 {% block title %}Dashboard{% endblock %}
 
+{% load static %}
+
 {% block content %}
 
     {% if user.is_authenticated %}
+        <script>
+            var controller = new Controller();
+            {% if trains is not None %}
+                {% for train in trains %}
+                    controller.addTrain('{{train.id}}', '{{train.name}}', '{{train.lokid}}');
+                {% endfor %}
+            {% endif %}
+        </script>
+
         <div class="jumbotron" style="overflow-y: hidden">
             <div class="container">
                 <div class="row">
@@ -50,9 +61,7 @@
                         </ul>
                     </div>
                     <div class="col-sm-6 h-50 mw-100">
-                        <textarea class="form-control mw-100 border border-secondary rounded" name="output_commands">
-
-                        </textarea>
+                        <textarea class="form-control mw-100 border border-secondary rounded" name="output_commands" readonly></textarea>
                     </div>
                     <div class="col-sm-3 h-50 mw-100">
                         <ul class="nav nav-pills nav-stacked d-block scrollbar-embedded border border-secondary rounded">
@@ -99,7 +108,7 @@
         </div>
         <div class="container">
             <div class="row">
-                <div class="col-md-9">
+                <div class="col-md-11">
                     {% if trains is None %}
                         <p>
                             <lead>No train found !</lead>
@@ -121,43 +130,48 @@
                                         <td>{{ train.name }}</td>
                                         <td>{{ train.lokid }}</td>
                                         <td>
-                                            <button type="button" class="btn btn-lg" aria-label="Accelerate">
-                                                <span class="fa fa-trash-o fa-lg" aria-hidden="true"></span>
+                                            <button type="button" class="btn btn-lg" aria-label="Accelerate" onclick="controller.getTrain({{train.id}}).accelerate();">
+                                                <span class="fa fa-arrow-up fa-lg" aria-hidden="true"></span>
                                             </button>
                                         </td>
                                         <td>
-                                            <button type="button" class="btn btn-lg" aria-label="Accelerate">
-                                                <span class="fa fa-trash-o fa-lg" aria-hidden="true"></span>
+                                            <button type="button" class="btn btn-lg" aria-label="Decelerate" onclick="controller.getTrain({{train.id}}).decelerate();">
+                                                <span class="fa fa-arrow-down fa-lg" aria-hidden="true"></span>
                                             </button>
                                         </td>
                                         <td>
-                                            <button type="button" class="btn btn-lg" aria-label="Accelerate">
+                                            <button type="button" class="btn btn-lg" aria-label="Reverse" onclick="controller.getTrain({{train.id}}).reverse();">
                                                 <span class="fa fa-arrows-alt-h fa-lg" aria-hidden="true"></span>
                                             </button>
                                         </td>
                                         <td>
-                                            <button type="button" class="btn btn-lg" aria-label="Accelerate">
-                                                <span class="fa fa-trash-o fa-lg" aria-hidden="true"></span>
+                                            <button type="button" class="btn btn-lg" aria-label="Lights" onclick="controller.getTrain({{train.id}}).toggleLights();">
+                                                <span class="fa fa-lightbulb fa-lg" aria-hidden="true"></span>
                                             </button>
                                         </td>
                                         <td>
-                                            <button type="button" class="btn btn-lg" aria-label="Accelerate">
-                                                <span class="fa fa-trash-o fa-lg" aria-hidden="true"></span>
+                                            <button type="button" class="btn btn-lg" aria-label="Function1" onclick="controller.getTrain({{train.id}}).toggleF1();">
+                                                <img style="max-width: 30px;" src="{% static '' %}img/fx.png"><strong>1</strong>
                                             </button>
                                         </td>
                                         <td>
-                                            <button type="button" class="btn btn-lg" aria-label="Accelerate">
-                                                <span class="fa fa-trash-o fa-lg" aria-hidden="true"></span>
+                                            <button type="button" class="btn btn-lg" aria-label="Function2" onclick="controller.getTrain({{train.id}}).toggleF2();">
+                                                <img style="max-width: 30px;" src="{% static '' %}img/fx.png"><strong>2</strong>
                                             </button>
                                         </td>
                                         <td>
-                                            <button type="button" class="btn btn-lg" aria-label="Accelerate">
-                                                <span class="fa fa-trash-o fa-lg" aria-hidden="true"></span>
+                                            <button type="button" class="btn btn-lg" aria-label="Function3" onclick="controller.getTrain({{train.id}}).toggleF3();">
+                                                <img style="max-width: 30px;" src="{% static '' %}img/fx.png"><strong>3</strong>
                                             </button>
                                         </td>
-
-                                        
-                                        <td><a class="btn btn-secondary" href="/train/show/{{ train.id }}">Go !</td>
+                                        <td>
+                                            <button type="button" class="btn btn-lg" aria-label="Function4" onclick="controller.getTrain({{train.id}}).toggleF4();">
+                                                <img style="max-width: 30px;" src="{% static '' %}img/fx.png"><strong>4</strong>
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-secondary btn-lg" href="/train/show/{{ train.id }}">Go !
+                                        </td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -165,7 +179,7 @@
                     </div>
                     {% endif %}
                 </div>
-                <div class="col-md-3 d-flex flex-column justify-content-center">
+                <div class="col-md-1 d-flex flex-column justify-content-center">
                     <div class="row p-2">
                         <input type="button" class="btn-xl btn-circle btn-go" value="Go!"/>
                     </div>
