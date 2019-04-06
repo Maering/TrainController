@@ -362,12 +362,16 @@ class SerialHandler:
 
     def send(self, payload):
         if self.port.isOpen():
-            self.port.write(payload.encode('ascii'))
+            self.port.reset_input_buffer()
+            print(self.port.port + ":" + self.port.write(payload.encode('ascii')) + " bytes written")
         else:
             raise IOError
 
     def readline(self):
-        return self.port.readline()
+        if self.port.out_waiting() > 0:
+            return self.port.readline()
+        else:
+            return "empty"
 
 # The factory settings configure the Intellibox for an IBM compatible PC and
 # for using only the syntax of the Märklin 6050/6051 Interface.
