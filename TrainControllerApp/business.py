@@ -417,7 +417,7 @@ class P50XaUpdateLok(P50XOrder):
     def __init__(self, train):
         super().__init__(
             'L',
-            train.self.lokAddress,
+            train.lokAddress,
             int(train.lights),
             int(train.forward),
             int(train.f1),
