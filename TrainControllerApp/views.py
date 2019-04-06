@@ -8,10 +8,11 @@ from .business import Controller
 # Init controller (ugly way to do it)
 controller = Controller()
 
-# Create your views here.
+
 def home(request):
     context = {}
     return render(request, 'home.html', context)
+
 
 def dashboard(request):
     if request.user.is_authenticated:
@@ -22,6 +23,7 @@ def dashboard(request):
         messages.error(request, "Login first !")
         return redirect('/')
 
+
 def about(request):
     context = {}
     return render(request, 'about.html', context)
@@ -29,6 +31,8 @@ def about(request):
 # -------------------------------- #
 # ------------ Trains ------------ #
 # -------------------------------- #
+
+
 def train_new(request):
     ''' display a form allowing user to register a new train '''
     if request.user.is_authenticated:
@@ -37,6 +41,7 @@ def train_new(request):
     else:
         messages.error(request, "Login first !")
         return redirect('/')
+
 
 def train_register(request):
     ''' Register a new train '''
@@ -67,6 +72,7 @@ def train_register(request):
         messages.error(request, "Login first !")
         return redirect('/')
 
+
 def train_edit(request, train_id):
     ''' display a form allowing user to edit a train '''
     if request.user.is_authenticated:
@@ -80,6 +86,7 @@ def train_edit(request, train_id):
     else:
         messages.error(request, "Login first !")
         return redirect('/')
+
 
 def train_update(request, train_id):
     if request.method == 'POST' and request.user.is_authenticated:
@@ -117,6 +124,7 @@ def train_update(request, train_id):
 def train_delete(request, train_id):
     pass
 
+
 def train_gallery(request):
     ''' display user's train '''
     if request.user.is_authenticated:
@@ -126,6 +134,7 @@ def train_gallery(request):
     else:
         messages.error(request, "Login first !")
         return redirect('/')
+
 
 def train_show(request, train_id):
     ''' display user's train '''
@@ -147,11 +156,13 @@ def train_show(request, train_id):
 # ------------ Commands ------------ #
 # ---------------------------------- #
 
+
 def command_gallery(request):
     ''' display every supported command to the user '''
     context = {}
     context['commands'] = Command.objects.all()
     return render(request, 'commands/gallery.html', context)
+
 
 def command_show(request, command_id):
     ''' display the command's page to the user '''
@@ -166,6 +177,8 @@ def command_show(request, command_id):
 # --------------------------------------- #
 # ------------ Control Panel ------------ #
 # --------------------------------------- #
+
+
 def control_panel(request):
     if request.user.is_authenticated:
         context = {}
@@ -176,12 +189,11 @@ def control_panel(request):
         messages.error(request, "Login first !")
         return redirect('/')
 
+
 def control_process(request):
     import json
 
     if request.user.is_authenticated and request.method == 'POST':
-        #try:
-
         # Fetch JSON
         data = request.POST.get('json')
         data = json.loads(data)
@@ -200,17 +212,14 @@ def control_process(request):
         if train_id is not None and not re.match('^[0-9]{4}$', train_id):
             messages.error(request, "Invalid train_id !")
             return HttpResponseBadRequest("Bad command provided")
-        
-        # Process action
-        controller.process(action, args)
 
-        # Read from Intellibox
-        return HttpResponse(controller.readResponse())
-            
-        # except:
-        #     messages.error(request, "An error occured while processing command !")
-        #     return HttpResponseBadRequest("Something went wrong !")
+        # Process action
+        if controller.process(action, args):
+            # Read from Intellibox
+            return HttpResponse(controller.readResponse())
+        else:
+            messages.error(request, "An error occured while processing !")
+            return HttpResponseBadRequest("Something went wrong !")
     else:
         messages.error(request, "Login first !")
         return redirect('/')
-

@@ -20,18 +20,15 @@ function fetchAjax(url, payload)
         body: data,
     };
 
-    var output = "";
-
     // send command
     fetch(url, init)
     .then(function (response) {
-        console.log(response);
-        output = response;
+        console.log(response)
+        return response;
     }).catch(function (error) {
-        console.log(error);
+        console.log(error)
+        return error;
     });
-
-    return output;
 }
 
 function send(action, args)

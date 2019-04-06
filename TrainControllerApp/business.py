@@ -12,7 +12,6 @@ class Controller:
 
     def __init__(self):
         self.trains = {}
-        pass
 
     def __register_new_lok__(self, name, lokAddress):
         ''' lokAddress is in base10
@@ -21,8 +20,11 @@ class Controller:
         '''
         lokAddress = int(lokAddress)
         new_train = Train(name, lokAddress)
-        self.trains[lokAddress] = new_train
-        return new_train
+        if lokAddress in self.trains.keys():
+            return self.trains[lokAddress]
+        else:
+            self.trains[lokAddress] = new_train
+            return new_train
 
     def __list_all_trains__(self):
         ''' print all knows train '''
