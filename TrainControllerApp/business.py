@@ -1,6 +1,13 @@
+from bitarray import bitarray
+from serial import Serial
+from serial import PARITY_NONE
+from serial import STOPBITS_TWO
+
 # ------------------------------------------ #
 # --------------- Controller --------------- #
 # ------------------------------------------ #
+
+
 class Controller:
 
     def __init__(self):
@@ -8,7 +15,7 @@ class Controller:
         pass
 
     def __register_new_lok__(self, name, lokAddress):
-        ''' lokAddress is in base10 
+        ''' lokAddress is in base10
             -----------------------
             returns : instancied train
         '''
@@ -25,7 +32,7 @@ class Controller:
     # ------------- actionS LINES -------------#
 
     def process(self, action, args):
-        ''' 
+        '''
         action  : [string] name of the action to perform
         args    : [dictionary]<string, object> dictionary of keys and values
         '''
@@ -35,27 +42,31 @@ class Controller:
         ''' process provided action and args '''
         if action == 'register':
             '''
-            type    : [train, signal, crossing, etc...]
+            what    : [train, signal, crossing, etc...]
             name    : a name
-            lokid   : (base10)
+            address : (base10)
             '''
-            if args[0] == 'train':
-                self.__register_new_lok__(args[1], args[2])
+            what = args.get('what')
+            name = args.get('name')
+            address = int(args.get('address'))
+
+            if what == 'train':
+                self.__register_new_lok__(name, address)
                 print('train registred !')
-            elif args[0] == 'signal':
-                pass # next updates
-            elif args[0] == 'crossing':
-                pass # next updates
+            elif what == 'signal':
+                pass  # next updates
+            elif what == 'crossing':
+                pass  # next updates
 
         elif action == 'train':
-            ''' 
-            lokid   : 
+            '''
+            lokid   :
             action  : [acc, dec, rev, tl, t1, t2, t3, t4]
             '''
-
-            lokid = args.get('lokid')
+            lokid = int(args.get('lokid'))
             train_action = args.get('action')
 
+            # Get train
             train = self.trains[lokid]
 
             if train is not None:
@@ -77,20 +88,22 @@ class Controller:
                     train.toggleF4()
             else:
                 raise Exception
-            
+
             print('train altered !')
-        
+
         elif action == 'list':
             '''
-            args0 : type [train, signal, crossing, etc...]
+            what : [train, signal, crossing, etc...]
             List all target & registred material
             '''
-            if args[0] == 'train':
+            what = args.get('what')
+
+            if what == 'train':
                 self.__list_all_trains__()
-            elif args[0] == 'signal':
-                pass # next updates
-            elif args[0] == 'crossing':
-                pass # next updates
+            elif what == 'signal':
+                pass  # next updates
+            elif what == 'crossing':
+                pass  # next updates
 
         elif action == 'stop':
             '''
@@ -120,6 +133,10 @@ class Controller:
 
         return True
 
+    def readResponse(self):
+        ''' read line from serial port '''
+        return SerialHandler.getInstance().readline()
+
     def __help__(self):
         ''' help of the function '''
         response = 'List of knows actions : \r\n\t'
@@ -129,7 +146,7 @@ class Controller:
             'train',
             'list',
             'stop',
-            'go',                        
+            'go',
             'TODO: use -h after a action to see its help !'
             ])
         print(response)
@@ -137,6 +154,8 @@ class Controller:
 # ------------------------------------- #
 # --------------- Train --------------- #
 # ------------------------------------- #
+
+
 class Train:
 
     SPEEDS = []
@@ -158,24 +177,32 @@ class Train:
     SPEEDS.insert(15, 127)
 
     def __init__(self, name, lokAddress):
-        ''' By default the train will have his speed set to 0, going forward and everything turned off '''
-        self.name = name
-        self.state = None
-
+        '''
+        By default the train will have :
+        - speed     : 0
+        - forward   : true
+        - lights    : false
+        - f[1,2,3,4]: false
+        '''
+        # Validate lokAddress
         if lokAddress < 0 or lokAddress > 9999:
             raise Exception('Invalid lokAddress')
         else:
+            self.lokAddress = lokAddress
             # [2:] to remove 0x at the beginning
             address = hex(lokAddress)[2:]
 
             # Split the address in two byte
-            self.address_less_significant = address[:2] or '0000' # low part
-            self.address_most_significant = address[2:] or '0000' # high part
+            self.address_less_significant = address[:2] or '0000'  # low part
+            self.address_most_significant = address[2:] or '0000'  # high part
+
+        # Set name
+        self.name = name
 
         # Send as one byte
         self.speed = 0
         self.speed_index = 0
-        self.__setSpeed__(0) # range from 0 to 127
+        self.__setSpeed__(0)  # range from 0 to 127
 
         # Send as one byte, each parameters is a bit
         self.lights = False
@@ -187,9 +214,10 @@ class Train:
         self.f3 = False
         self.f4 = False
 
-    #################
-    ###  SETTERS  ###
-    #################
+    # --------------------------------------- #
+    # --------------- SETTERS --------------- #
+    # --------------------------------------- #
+
     def __setSpeed__(self, value):
         if value < 0 or value > 127:
             raise Exception
@@ -208,9 +236,9 @@ class Train:
             self.speed_index = next_index
             self.__setSpeed__(Train.SPEEDS[self.speed_index])
 
-    #################
-    ###  GETTERS  ###
-    #################
+    # --------------------------------------- #
+    # --------------- GETTERS --------------- #
+    # --------------------------------------- #
 
     @property
     def parameters(self):
@@ -231,15 +259,15 @@ class Train:
         byte.append(self.f2)
         byte.append(self.f1)
 
-        # Simplest way to get an hex representation of an array composed of byte
+        # Simplest way to get an hex representation of bytes
         return hex(int(byte.to01(), 2))[2:]
 
-    #################
-    ### FUNCTIONS ###
-    #################
+    # ----------------------------------------- #
+    # --------------- FUNCTIONS --------------- #
+    # ----------------------------------------- #
 
     def update(self):
-        order = P50XUpdateLok(self)
+        order = P50XaUpdateLok(self)
         order.execute()
 
     def reverse(self):
@@ -253,7 +281,7 @@ class Train:
         self.update()
 
     def decreaseSpeed(self):
-        self.__increaseSpeed__()
+        self.__decreaseSpeed__()
         self.update()
 
     def toggleLights(self):
@@ -275,11 +303,14 @@ class Train:
     def toggleF4(self):
         self.f4 = not self.f4
         self.update()
-    
+
     def __str__(self):
         __string = []
         __string.append('Train : {0}'.format(self.name))
-        __string.append('Address : low({0}) high({1})'.format(self.address_less_significant, self.address_most_significant))
+        __string.append('Address : low({0}) high({1})'.format(
+            self.address_less_significant,
+            self.address_most_significant)
+        )
         __string.append('Speed : {0}'.format(self.speed))
         __string.append('Lights : {0}'.format(self.lights))
         __string.append('Forward : {0}'.format(self.forward))
@@ -292,21 +323,14 @@ class Train:
 # ------------------------------------------ #
 # --------------- SerialPort --------------- #
 # ------------------------------------------ #
-from serial import *
-# The factory settings configure the Intellibox for an IBM compatible PC and
-# for using only the syntax of the Märklin 6050/6051 Interface.
-#      * The default Intellibox serial interface settings are:
-#      * 8 data bits
-#      * 2†stop bits
-#      * baud rate 19200 bit/s
-#      * no parity
-#      * CTS line used
-#      * DTR line not used.
-#      * -------------------------------------------
-#      * More information (french) : http://www.espacerails.com/modelisme/article-44-intellibox--le-protocole-p50x.html
+
+
 class SerialHandler:
-    """ https://gist.github.com/pazdera/1098129 """
+    '''
+    https://gist.github.com/pazdera/1098129
+    '''
     __instance = None
+
     @staticmethod 
     def getInstance():
         """ Static access method. """
@@ -320,14 +344,14 @@ class SerialHandler:
             raise Exception("This class is a singleton!")
         else:
             SerialHandler.__instance = self
-            self.port = serial.Serial()
+            self.port = Serial()
 
     def connect(self, address):
         # Configure port
         self.port.port = address
         self.port.baudrate = 19200
-        self.port.parity = serial.PARITY_NONE
-        self.port.stopbits = serial.STOPBITS_TWO
+        self.port.parity = PARITY_NONE
+        self.port.stopbits = STOPBITS_TWO
 
         # Open port
         self.port.open()
@@ -338,5 +362,64 @@ class SerialHandler:
         else:
             raise IOError
 
-    def read(self):
-        print(self.port.readall())
+    def readline(self):
+        return self.port.readline()
+
+# The factory settings configure the Intellibox for an IBM compatible PC and
+# for using only the syntax of the Märklin 6050/6051 Interface.
+#      * The default Intellibox serial interface settings are:
+#      * 8 data bits
+#      * 2†stop bits
+#      * baud rate 19200 bit/s
+#      * no parity
+#      * CTS line used
+#      * DTR line not used.
+#      * -------------------------------------------
+#      * More information (french) :
+#      http://www.espacerails.com/modelisme/article-44-intellibox--le-protocole-p50x.html
+
+
+class P50XOrder:
+    def __init__(self, action, *params):
+        '''
+        action  : known P50x command
+        params  : parameters of the command
+        '''
+        self.action = action
+        self.params = params
+
+    def execute(self):
+        ''' Send the order to RS232 '''
+        _instance = SerialHandler.getInstance()
+        _instance.send(self.action)
+        for param in self.params:
+            _instance.send(param)
+
+    def __str__(self):
+        __string = 'Action : {0}, Parameters ['.format(self.action)
+        __params = ', '.join(self.params)
+        return __string + __params + ']'
+
+
+class P50XaGo(P50XOrder):
+    def __init__(self):
+        super().init('xGo')
+
+
+class P50XaStop(P50XOrder):
+    def __init__(self):
+        super().init('xStop')
+
+
+class P50XaUpdateLok(P50XOrder):
+    def __init__(self, train):
+        super().__init__(
+            'L',
+            train.self.lokAddress,
+            int(train.lights),
+            int(train.forward),
+            int(train.f1),
+            int(train.f2),
+            int(train.f3),
+            int(train.f4)
+        )

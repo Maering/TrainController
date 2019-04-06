@@ -105,7 +105,7 @@ class Train {
     }
 
     register() {
-        var result = send('register', { type: 'train', name: this.name, lokid: this.lokid });
+        var result = send('register', { what: 'train', name: this.name, address: this.lokid });
         if(result == 'ok')
         {
             //TODO: //FIXME: not securized since Intellibox could throw error
@@ -125,7 +125,7 @@ class Train {
         }
         else
         {
-            console.log("[register]:"+result);
+            console.log("[accelerate]:"+result);
             //TODO:
         }
     }
