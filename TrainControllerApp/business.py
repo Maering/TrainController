@@ -363,12 +363,17 @@ class SerialHandler:
     def send(self, payload):
         if self.port.isOpen():
             self.port.reset_input_buffer()
-            print(self.port.port + ":" + self.port.write(payload.encode('ascii')) + " bytes written")
+            print(
+                str(self.port.port) +
+                ":" +
+                str(self.port.write(payload.encode('ascii'))) +
+                " bytes written"
+            )
         else:
             raise IOError
 
     def readline(self):
-        if self.port.out_waiting() > 0:
+        if self.port.out_waiting > 0:
             return self.port.readline()
         else:
             return "empty"
