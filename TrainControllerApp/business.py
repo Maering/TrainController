@@ -12,6 +12,8 @@ class Controller:
 
     def __init__(self):
         self.trains = {}
+        SerialHandler.getInstance().connect('/dev/ttyUSB0')
+        SerialHandler.getInstance().send('xZzA1')  # configure Intellibox
 
     def __register_new_lok__(self, name, lokAddress):
         ''' lokAddress is in base10
@@ -358,9 +360,9 @@ class SerialHandler:
         # Open port
         self.port.open()
 
-    def send(self, __bytes):
+    def send(self, payload):
         if self.port.isOpen():
-            self.port.write(__bytes)
+            self.port.write(payload.encode('ascii'))
         else:
             raise IOError
 
@@ -393,9 +395,9 @@ class P50XOrder:
     def execute(self):
         ''' Send the order to RS232 '''
         _instance = SerialHandler.getInstance()
-        _instance.send(self.action)
-        for param in self.params:
-            _instance.send(param)
+        message = ' '.join(self.params)
+        message = ' '.join([self.action, message])
+        _instance.send(message)
 
     def __str__(self):
         __string = 'Action : {0}, Parameters ['.format(self.action)
@@ -417,11 +419,11 @@ class P50XaUpdateLok(P50XOrder):
     def __init__(self, train):
         super().__init__(
             'L',
-            train.lokAddress,
-            int(train.lights),
-            int(train.forward),
-            int(train.f1),
-            int(train.f2),
-            int(train.f3),
-            int(train.f4)
+            str(train.lokAddress),
+            str(int(train.lights)),
+            str(int(train.forward)),
+            str(int(train.f1)),
+            str(int(train.f2)),
+            str(int(train.f3)),
+            str(int(train.f4))
         )

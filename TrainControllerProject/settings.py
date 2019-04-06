@@ -25,7 +25,7 @@ SECRET_KEY = 'z6^w08487b&aa^1dx1f*+=fc%^g@af_ec1!x7g41(n-^d_ebgk'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.1.108']
 
 
 # Application definition
@@ -126,8 +126,7 @@ STATIC_ROOT = '/var/www/static/'
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
-    '/var/www/static/',
+    os.path.join(BASE_DIR, "static")
 ]
 
 LOGIN_REDIRECT_URL = 'home'
