@@ -34,7 +34,7 @@
                                         <td>{{ command.p50xb }}</td>
                                         <td>{{ command.description }}</td>
                                         <td>{{ command.hasparams }}</td>
-                                        <td><a class="btn btn-secondary" href="/command/show/{{ command.id }}">Go !</td>
+                                        <td><a class="btn btn-secondary" href="{% url 'commands.show' command_id=command.id %}">Go !</td>
                                     </tr>
                                 {% endfor %}
                             </tbody>

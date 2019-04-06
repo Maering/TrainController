@@ -36,7 +36,7 @@
                                     <tr>
                                         <td>{{ train.name }}</td>
                                         <td>{{ train.lokid }}</td>
-                                        <td><a class="btn btn-secondary" href="/train/show/{{ train.id }}">Go !</td>
+                                        <td><a class="btn btn-secondary" href="{% url 'trains.show' train_id=train.id %}">Go !</td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
