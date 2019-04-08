@@ -24,6 +24,8 @@ html, body, main {
     overflow-y: scroll;
 }
 
+.iconify-stop { color: red; }
+
 /* from : https://codepen.io/jnbruno/pen/vNpPpW */
 .btn-circle {
     width: 30px;

@@ -25,10 +25,10 @@
                     </div>
                     <div class="col-md-1">
                         <div class="row p-2">
-                            <input type="button" class="btn-xl btn-circle btn-go" value="Go!"/>
+                            <input type="button" class="btn-xl btn-circle btn-go" value="  Go!   " onclick="controller.go();"/>
                         </div>
                         <div class="row p-2">
-                            <input type="button" class="btn-xl btn-circle btn-stop" value="Stop!"/>
+                            <input type="button" class="btn-xl btn-circle btn-stop" value="Stop!" onclick="controller.stop();"/>
                         </div>
                     </div>
                 </div>
@@ -36,78 +36,138 @@
             </div>
         </div>
         <div class="container">
-            <div class="row d-flex flex-column justify-content-center p-3">
+            <div class="d-flex flex-column justify-content-center">
                 {% if trains is None %}
                     <p>
                         <lead>No train found !</lead>
                     </p>
                 {% else %}
-                <div class="table-responsive mw-100">
-                    <table class="table table-hover text-center">
-                        <thead>
-                            <tr>
-                                <th scope="col">Name</th>
-                                <th scope="col">LokID</th>
-                                <th scope="col" colspan="2">Speed</th>
-                                <th scope="col">Direction</th>
-                                <th scope="col">Lights</th>
-                                <th scope="col" colspan="4">Functions</th>
-                                <th scope="col">Link</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for train in trains %}
-                                <tr>
-                                    <td>{{ train.name }}</td>
-                                    <td>{{ train.lokid }}</td>
-                                    <td>
-                                        <button type="button" class="btn btn-lg" aria-label="Accelerate" onclick="controller.getTrain({{train.id}}).accelerate();">
-                                            <span class="fa fa-arrow-up fa-lg" aria-hidden="true"></span>
-                                        </button>
-                                    </td>
-                                    <td>
+                    <div class="card-album">
+                        {% for train in trains %}
+                            <div class="card m-3">
+                                <div class="card-header d-flex justify-content-between">
+                                    <div class="">
+                                        <p class="h2 card-text">{{ train.name }} [{{ train.lokid }}]</p>
+                                    </div>
+                                    <div class="">
                                         <button type="button" class="btn btn-lg" aria-label="Decelerate" onclick="controller.getTrain({{train.id}}).decelerate();">
-                                            <span class="fa fa-arrow-down fa-lg" aria-hidden="true"></span>
+                                                <span class="iconify" data-icon="fa-solid:backward" data-inline="true"></span>
                                         </button>
-                                    </td>
-                                    <td>
-                                        <button type="button" class="btn btn-lg" aria-label="Reverse" onclick="controller.getTrain({{train.id}}).reverse();">
-                                            <span class="fa fa-arrows-alt-h fa-lg" aria-hidden="true"></span>
+                                        <button type="button" class="btn btn-lg" aria-label="Accelerate" onclick="controller.getTrain({{train.id}}).accelerate();">
+                                            <span class="iconify" data-icon="fa-solid:forward" data-inline="true"></span>
                                         </button>
-                                    </td>
-                                    <td>
-                                        <button type="button" class="btn btn-lg" aria-label="Lights" onclick="controller.getTrain({{train.id}}).toggleLights();">
-                                            <span class="fa fa-lightbulb fa-lg" aria-hidden="true"></span>
+                                        <button type="button" class="btn btn-lg" aria-label="Stop" onclick="controller.getTrain({{train.id}}).stop();">
+                                            <span class="iconify iconify-stop" data-icon="octicon:stop" data-inline="true"></span>
                                         </button>
-                                    </td>
-                                    <td>
-                                        <button type="button" class="btn btn-lg" aria-label="Function1" onclick="controller.getTrain({{train.id}}).toggleF1();">
-                                            <img style="max-width: 30px;" src="{% static '' %}img/fx.png"><strong>1</strong>
+                                    </div>
+                                    <div class="">
+                                        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse{{train.id}}" aria-expanded="false" aria-controls="collapse{{train.id}}">
+                                            <span class="iconify" data-icon="uil:expand-arrows" data-inline="true"></span>
                                         </button>
-                                    </td>
-                                    <td>
-                                        <button type="button" class="btn btn-lg" aria-label="Function2" onclick="controller.getTrain({{train.id}}).toggleF2();">
-                                            <img style="max-width: 30px;" src="{% static '' %}img/fx.png"><strong>2</strong>
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button type="button" class="btn btn-lg" aria-label="Function3" onclick="controller.getTrain({{train.id}}).toggleF3();">
-                                            <img style="max-width: 30px;" src="{% static '' %}img/fx.png"><strong>3</strong>
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button type="button" class="btn btn-lg" aria-label="Function4" onclick="controller.getTrain({{train.id}}).toggleF4();">
-                                            <img style="max-width: 30px;" src="{% static '' %}img/fx.png"><strong>4</strong>
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <a class="btn btn-secondary btn-lg" href="{% url 'trains.show' train_id=train.id %}">Go !
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="collapse" id="collapse{{train.id}}">
+                                    <div class="card-body">
+
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        Speed
+                                                    </div>
+                                                    <div class="col-md">
+                                                        {{ train.speed }}
+                                                    </div>
+                                                </div>
+        
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        Forward
+                                                    </div>
+                                                    <div class="col-md">
+                                                        <div class="pretty p-icon p-round p-pulse">
+                                                            <input id="{{train.id}}_reverse" type="checkbox" onclick="controller.getTrain({{train.id}}).reverse();"/>
+                                                            <div class="state">
+                                                                <i class="icon mdi mdi-check"></i>
+                                                                <label for="{{train.id}}_reverse"> Toggle</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        Lights
+                                                    </div>
+                                                    <div class="col-md">
+                                                        <div class="pretty p-icon p-round p-pulse">
+                                                            <input id="{{train.id}}_lights" type="checkbox" onclick="controller.getTrain({{train.id}}).toggleLights();"/>
+                                                            <div class="state">
+                                                                <i class="icon mdi mdi-check"></i>
+                                                                <label for="{{train.id}}_lights"> Toggle</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <p>Functions</p>
+                                                <div class="table-responsive">
+                                                    <table class="table table-hover">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>
+                                                                    <div class="pretty p-icon p-round p-pulse">
+                                                                        <input id="{{train.id}}_f1" type="checkbox" onclick="controller.getTrain({{train.id}}).toggleF1();"/>
+                                                                        <div class="state">
+                                                                            <i class="icon mdi mdi-check"></i>
+                                                                            <label for="{{train.id}}_f1"> F1</label>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="pretty p-icon p-round p-pulse">
+                                                                        <input id="{{train.id}}_f2" type="checkbox" onclick="controller.getTrain({{train.id}}).toggleF2();"/>
+                                                                        <div class="state">
+                                                                            <i class="icon mdi mdi-check"></i>
+                                                                            <label for="{{train.id}}_f2"> F2</label>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="pretty p-icon p-round p-pulse">
+                                                                        <input id="{{train.id}}_f3" type="checkbox" onclick="controller.getTrain({{train.id}}).toggleF3();"/>
+                                                                        <div class="state">
+                                                                            <i class="icon mdi mdi-check"></i>
+                                                                            <label for="{{train.id}}_f3"> F3</label>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="pretty p-icon p-round p-pulse">
+                                                                        <input id="{{train.id}}_f4" type="checkbox" onclick="controller.getTrain({{train.id}}).toggleF4();"/>
+                                                                        <div class="state">
+                                                                            <i class="icon mdi mdi-check"></i>
+                                                                            <label for="{{train.id}}_f4"> F4</label>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="card-footer">
+                                    <a class="btn btn-secondary btn-lg" href="{% url 'trains.show' train_id=train.id %}">Go !</a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
                 {% endif %}
             </div>
         </div>

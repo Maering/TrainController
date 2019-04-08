@@ -133,6 +133,18 @@ class Train {
         }
         else
         {
+            console.log("[decelerate]:"+result);
+            //TODO:
+        }
+    }
+    stop() {
+        if(send('train', { action:'stop', lokid: this.lokid }) == 'ok')
+        {
+            //TODO: //FIXME: not securized since Intellibox could throw error
+        }
+        else
+        {
+            console.log("[stop]:"+result);
             //TODO:
         }
     }
@@ -143,6 +155,7 @@ class Train {
         }
         else
         {
+            console.log("[reverse]:"+result);
             //TODO:
         }
     }
@@ -153,6 +166,7 @@ class Train {
         }
         else
         {
+            console.log("[togglelights]:"+result);
             //TODO:
         }
     }
@@ -163,6 +177,7 @@ class Train {
         }
         else
         {
+            console.log("[togglef1]:"+result);
             //TODO:
         }
     }
@@ -173,6 +188,7 @@ class Train {
         }
         else
         {
+            console.log("[togglef2]:"+result);
             //TODO:
         }
     }
@@ -183,6 +199,7 @@ class Train {
         }
         else
         {
+            console.log("[togglef3]:"+result);
             //TODO:
         }
     }
@@ -193,6 +210,7 @@ class Train {
         }
         else
         {
+            console.log("[togglef4]:"+result);
             //TODO:
         }
     }

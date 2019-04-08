@@ -12,8 +12,8 @@ class Controller:
 
     def __init__(self):
         self.trains = {}
-        SerialHandler.getInstance().connect('/dev/ttyUSB0')
-        SerialHandler.getInstance().send('xZzA1')  # configure Intellibox
+        #SerialHandler.getInstance().connect('/dev/ttyUSB0')
+        #SerialHandler.getInstance().send('xZzA1')  # configure Intellibox
 
     def __register_new_lok__(self, name, lokAddress):
         ''' lokAddress is in base10
@@ -65,7 +65,7 @@ class Controller:
         elif action == 'train':
             '''
             lokid   :
-            action  : [acc, dec, rev, tl, t1, t2, t3, t4]
+            action  : [accelerate, decelerate, stop, reverse, togglelights, togglef1, togglef2, togglef3, togglef4]
             '''
             lokid = int(args.get('lokid'))
             train_action = args.get('action')
@@ -78,6 +78,8 @@ class Controller:
                     train.increaseSpeed()
                 elif train_action == 'decelerate':
                     train.decreaseSpeed()
+                elif train_action == 'stop':
+                    train.stop()
                 elif train_action == 'reverse':
                     train.reverse()
                 elif train_action == 'togglelights':
@@ -274,6 +276,11 @@ class Train:
         order = P50XaUpdateLok(self)
         order.execute()
 
+    def stop(self):
+        self.__setSpeed__(0)
+        self.speed_index = 0
+        self.update()
+
     def reverse(self):
         self.__setSpeed__(0)
         self.speed_index = 0
@@ -362,6 +369,7 @@ class SerialHandler:
 
     def send(self, payload):
         if self.port.isOpen():
+            payload = payload + '\r'
             self.port.write(payload.encode('ascii'))
         else:
             raise IOError
@@ -397,6 +405,7 @@ class P50XOrder:
         _instance = SerialHandler.getInstance()
         message = ' '.join(self.params)
         message = ' '.join([self.action, message])
+        message = message
         _instance.send(message)
 
     def __str__(self):
