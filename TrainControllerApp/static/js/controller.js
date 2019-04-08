@@ -127,7 +127,8 @@ class Train {
         }
     }
     decelerate() {
-        if(send('train', { action:'decelerate', lokid: this.lokid }) == 'ok')
+        var result = send('train', { action:'decelerate', lokid: this.lokid });
+        if(result == 'ok')
         {
             //TODO: //FIXME: not securized since Intellibox could throw error
         }
@@ -138,7 +139,8 @@ class Train {
         }
     }
     stop() {
-        if(send('train', { action:'stop', lokid: this.lokid }) == 'ok')
+        var result = send('train', { action:'stop', lokid: this.lokid });
+        if(result == 'ok')
         {
             //TODO: //FIXME: not securized since Intellibox could throw error
         }
@@ -149,7 +151,8 @@ class Train {
         }
     }
     reverse() {
-        if(send('train', { action:'reverse', lokid: this.lokid }) == 'ok')
+        var result = send('train', { action:'reverse', lokid: this.lokid });
+        if(result == 'ok')
         {
             //TODO: //FIXME: not securized since Intellibox could throw error
         }
@@ -160,7 +163,8 @@ class Train {
         }
     }
     toggleLights() {
-        if(send('train', { action:'togglelights', lokid: this.lokid }) == 'ok')
+        var result = send('train', { action:'togglelights', lokid: this.lokid });
+        if(result == 'ok')
         {
             //TODO: //FIXME: not securized since Intellibox could throw error
         }
@@ -171,7 +175,8 @@ class Train {
         }
     }
     toggleF1() {
-        if(send('train', { action:'togglef1', lokid: this.lokid }) == 'ok')
+        var result = send('train', { action:'togglef1', lokid: this.lokid });
+        if(result == 'ok')
         {
             //TODO: //FIXME: not securized since Intellibox could throw error
         }
@@ -182,7 +187,8 @@ class Train {
         }
     }
     toggleF2() {
-        if(send('train', { action:'togglef2', lokid: this.lokid }) == 'ok')
+        var result = send('train', { action:'togglef2', lokid: this.lokid });
+        if(result == 'ok')
         {
             //TODO: //FIXME: not securized since Intellibox could throw error
         }
@@ -193,7 +199,8 @@ class Train {
         }
     }
     toggleF3() {
-        if(send('train', { action:'togglef3', lokid: this.lokid }) == 'ok')
+        var result = send('train', { action:'togglef3', lokid: this.lokid });
+        if(result == 'ok')
         {
             //TODO: //FIXME: not securized since Intellibox could throw error
         }
@@ -204,7 +211,8 @@ class Train {
         }
     }
     toggleF4() {
-        if(send('train', { action:'togglef4', lokid: this.lokid }) == 'ok')
+        var result = send('train', { action:'togglef4', lokid: this.lokid });
+        if(result == 'ok')
         {
             //TODO: //FIXME: not securized since Intellibox could throw error
         }
