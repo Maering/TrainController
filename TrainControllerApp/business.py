@@ -12,8 +12,8 @@ class Controller:
 
     def __init__(self):
         self.trains = {}
-        #SerialHandler.getInstance().connect('/dev/ttyUSB0')
-        #SerialHandler.getInstance().send('xZzA1')  # configure Intellibox
+        SerialHandler.getInstance().connect('/dev/ttyUSB0')
+        SerialHandler.getInstance().send('xZzA1')  # configure Intellibox
 
     def __register_new_lok__(self, name, lokAddress):
         ''' lokAddress is in base10
@@ -165,7 +165,7 @@ class Controller:
 class Train:
 
     SPEEDS = []
-    SPEEDS.insert(0, 0)  
+    SPEEDS.insert(0, 0)
     SPEEDS.insert(1, 1)
     SPEEDS.insert(2, 2)
     SPEEDS.insert(3, 10)
@@ -342,7 +342,7 @@ class SerialHandler:
     '''
     __instance = None
 
-    @staticmethod 
+    @staticmethod
     def getInstance():
         """ Static access method. """
         if SerialHandler.__instance is None:
@@ -370,12 +370,21 @@ class SerialHandler:
     def send(self, payload):
         if self.port.isOpen():
             payload = payload + '\r'
-            self.port.write(payload.encode('ascii'))
+            print(
+                str(self.port.port) +
+                ":" +
+                str(self.port.write(payload.encode('ascii'))) +
+                " bytes written"
+            )
+            self.port.reset_input_buffer()
         else:
             raise IOError
 
     def readline(self):
-        return self.port.readline()
+        if self.port.out_waiting > 0:
+            return self.port.readline()
+        else:
+            return "empty"
 
 # The factory settings configure the Intellibox for an IBM compatible PC and
 # for using only the syntax of the Märklin 6050/6051 Interface.
