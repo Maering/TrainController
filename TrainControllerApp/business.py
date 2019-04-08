@@ -363,7 +363,7 @@ class SerialHandler:
         self.port.baudrate = 19200
         self.port.parity = PARITY_NONE
         self.port.stopbits = STOPBITS_TWO
-        self.port.timeout = 0.100  #seconds
+        self.port.timeout = 0.100  # seconds
 
         # Open port
         self.port.open()
