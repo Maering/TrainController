@@ -363,6 +363,7 @@ class SerialHandler:
         self.port.baudrate = 19200
         self.port.parity = PARITY_NONE
         self.port.stopbits = STOPBITS_TWO
+        self.port.timeout = 0.100  #seconds
 
         # Open port
         self.port.open()
@@ -382,7 +383,9 @@ class SerialHandler:
 
     def readline(self):
         if self.port.out_waiting > 0:
-            return self.port.readline()
+            output = self.port.readline()
+            print(output)
+            return output
         else:
             return "empty"
 
