@@ -2,6 +2,7 @@ from bitarray import bitarray
 from serial import Serial
 from serial import PARITY_NONE
 from serial import STOPBITS_TWO
+from serial import EIGHTBITS
 
 # ------------------------------------------ #
 # --------------- Controller --------------- #
@@ -115,6 +116,8 @@ class Controller:
             '''
             Turns off the system
             '''
+            order = P50XaStop()
+            order.execute()
             # TODO:
             pass
 
@@ -122,6 +125,8 @@ class Controller:
             '''
             Turns on the system
             '''
+            order = P50XaGo()
+            order.execute()
             # TODO:
             pass
 
@@ -361,23 +366,27 @@ class SerialHandler:
         # Configure port
         self.port.port = address
         self.port.baudrate = 19200
+        self.port.bitesize = EIGHTBITS
         self.port.parity = PARITY_NONE
         self.port.stopbits = STOPBITS_TWO
-        self.port.timeout = 0.100  #seconds
+        self.port.timeout = 0.250  #seconds
+        self.port.rtscts = True
 
         # Open port
         self.port.open()
 
     def send(self, payload):
         if self.port.isOpen():
-            payload = payload + '\r'
+            data = (payload+'\n').encode('ascii')
+            print(data)
             print(
                 str(self.port.port) +
                 ":" +
-                str(self.port.write(payload.encode('ascii'))) +
+                str(self.port.write(data)) +
                 " bytes written"
             )
-            self.port.reset_input_buffer()
+            self.port.send_break()
+            self.port.flush()
         else:
             raise IOError
 
@@ -428,12 +437,12 @@ class P50XOrder:
 
 class P50XaGo(P50XOrder):
     def __init__(self):
-        super().init('xGo')
+        super().__init__('Go')
 
 
 class P50XaStop(P50XOrder):
     def __init__(self):
-        super().init('xStop')
+        super().__init__('Stop')
 
 
 class P50XaUpdateLok(P50XOrder):
@@ -441,6 +450,7 @@ class P50XaUpdateLok(P50XOrder):
         super().__init__(
             'L',
             str(train.lokAddress),
+            str(train.speed),
             str(int(train.lights)),
             str(int(train.forward)),
             str(int(train.f1)),
