@@ -2,6 +2,7 @@ from bitarray import bitarray
 from serial import Serial
 from serial import PARITY_NONE
 from serial import STOPBITS_TWO
+from serial import EIGHTBITS
 
 # ------------------------------------------ #
 # --------------- Controller --------------- #
@@ -12,6 +13,8 @@ class Controller:
 
     def __init__(self):
         self.trains = {}
+        SerialHandler.getInstance().connect('/dev/ttyUSB0')
+        SerialHandler.getInstance().send('xZzA1')  # configure Intellibox
 
     def __register_new_lok__(self, name, lokAddress):
         ''' lokAddress is in base10
@@ -63,7 +66,7 @@ class Controller:
         elif action == 'train':
             '''
             lokid   :
-            action  : [acc, dec, rev, tl, t1, t2, t3, t4]
+            action  : [accelerate, decelerate, stop, reverse, togglelights, togglef1, togglef2, togglef3, togglef4]
             '''
             lokid = int(args.get('lokid'))
             train_action = args.get('action')
@@ -76,6 +79,8 @@ class Controller:
                     train.increaseSpeed()
                 elif train_action == 'decelerate':
                     train.decreaseSpeed()
+                elif train_action == 'stop':
+                    train.stop()
                 elif train_action == 'reverse':
                     train.reverse()
                 elif train_action == 'togglelights':
@@ -111,6 +116,8 @@ class Controller:
             '''
             Turns off the system
             '''
+            order = P50XaStop()
+            order.execute()
             # TODO:
             pass
 
@@ -118,6 +125,8 @@ class Controller:
             '''
             Turns on the system
             '''
+            order = P50XaGo()
+            order.execute()
             # TODO:
             pass
 
@@ -161,7 +170,7 @@ class Controller:
 class Train:
 
     SPEEDS = []
-    SPEEDS.insert(0, 0)  
+    SPEEDS.insert(0, 0)
     SPEEDS.insert(1, 1)
     SPEEDS.insert(2, 2)
     SPEEDS.insert(3, 10)
@@ -272,6 +281,11 @@ class Train:
         order = P50XaUpdateLok(self)
         order.execute()
 
+    def stop(self):
+        self.__setSpeed__(0)
+        self.speed_index = 0
+        self.update()
+
     def reverse(self):
         self.__setSpeed__(0)
         self.speed_index = 0
@@ -333,7 +347,7 @@ class SerialHandler:
     '''
     __instance = None
 
-    @staticmethod 
+    @staticmethod
     def getInstance():
         """ Static access method. """
         if SerialHandler.__instance is None:
@@ -352,20 +366,37 @@ class SerialHandler:
         # Configure port
         self.port.port = address
         self.port.baudrate = 19200
+        self.port.bitesize = EIGHTBITS
         self.port.parity = PARITY_NONE
         self.port.stopbits = STOPBITS_TWO
+        self.port.timeout = 0.250  #seconds
+        self.port.rtscts = True
 
         # Open port
         self.port.open()
 
-    def send(self, __bytes):
+    def send(self, payload):
         if self.port.isOpen():
-            self.port.write(__bytes)
+            data = (payload+'\n').encode('ascii')
+            print(data)
+            print(
+                str(self.port.port) +
+                ":" +
+                str(self.port.write(data)) +
+                " bytes written"
+            )
+            self.port.send_break()
+            self.port.flush()
         else:
             raise IOError
 
     def readline(self):
-        return self.port.readline()
+        if self.port.out_waiting > 0:
+            output = self.port.readline()
+            print(output)
+            return output
+        else:
+            return "empty"
 
 # The factory settings configure the Intellibox for an IBM compatible PC and
 # for using only the syntax of the Märklin 6050/6051 Interface.
@@ -393,9 +424,10 @@ class P50XOrder:
     def execute(self):
         ''' Send the order to RS232 '''
         _instance = SerialHandler.getInstance()
-        _instance.send(self.action)
-        for param in self.params:
-            _instance.send(param)
+        message = ' '.join(self.params)
+        message = ' '.join([self.action, message])
+        message = message
+        _instance.send(message)
 
     def __str__(self):
         __string = 'Action : {0}, Parameters ['.format(self.action)
@@ -405,23 +437,24 @@ class P50XOrder:
 
 class P50XaGo(P50XOrder):
     def __init__(self):
-        super().init('xGo')
+        super().__init__('Go')
 
 
 class P50XaStop(P50XOrder):
     def __init__(self):
-        super().init('xStop')
+        super().__init__('Stop')
 
 
 class P50XaUpdateLok(P50XOrder):
     def __init__(self, train):
         super().__init__(
             'L',
-            train.self.lokAddress,
-            int(train.lights),
-            int(train.forward),
-            int(train.f1),
-            int(train.f2),
-            int(train.f3),
-            int(train.f4)
+            str(train.lokAddress),
+            str(train.speed),
+            str(int(train.lights)),
+            str(int(train.forward)),
+            str(int(train.f1)),
+            str(int(train.f2)),
+            str(int(train.f3)),
+            str(int(train.f4))
         )

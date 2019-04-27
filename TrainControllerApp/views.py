@@ -207,11 +207,12 @@ def control_process(request):
         # Get args
         args = data.get('args')
 
-        # Validate train_id
-        train_id = args.get('id')
-        if train_id is not None and not re.match('^[0-9]{4}$', train_id):
-            messages.error(request, "Invalid train_id !")
-            return HttpResponseBadRequest("Bad command provided")
+        if args is not None:
+            # Validate train_id
+            train_id = args.get('id')
+            if train_id is not None and not re.match('^[0-9]{4}$', train_id):
+                messages.error(request, "Invalid train_id !")
+                return HttpResponseBadRequest("Bad command provided")
 
         # Process action
         if controller.process(action, args):

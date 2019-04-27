@@ -127,72 +127,98 @@ class Train {
         }
     }
     decelerate() {
-        if(send('train', { action:'decelerate', lokid: this.lokid }) == 'ok')
+        var result = send('train', { action:'decelerate', lokid: this.lokid });
+        if(result == 'ok')
         {
             //TODO: //FIXME: not securized since Intellibox could throw error
         }
         else
         {
+            console.log("[decelerate]:"+result);
+            //TODO:
+        }
+    }
+    stop() {
+        var result = send('train', { action:'stop', lokid: this.lokid });
+        if(result == 'ok')
+        {
+            //TODO: //FIXME: not securized since Intellibox could throw error
+        }
+        else
+        {
+            console.log("[stop]:"+result);
             //TODO:
         }
     }
     reverse() {
-        if(send('train', { action:'reverse', lokid: this.lokid }) == 'ok')
+        var result = send('train', { action:'reverse', lokid: this.lokid });
+        if(result == 'ok')
         {
             //TODO: //FIXME: not securized since Intellibox could throw error
         }
         else
         {
+            console.log("[reverse]:"+result);
             //TODO:
         }
     }
     toggleLights() {
-        if(send('train', { action:'togglelights', lokid: this.lokid }) == 'ok')
+        var result = send('train', { action:'togglelights', lokid: this.lokid });
+        if(result == 'ok')
         {
             //TODO: //FIXME: not securized since Intellibox could throw error
         }
         else
         {
+            console.log("[togglelights]:"+result);
             //TODO:
         }
     }
     toggleF1() {
-        if(send('train', { action:'togglef1', lokid: this.lokid }) == 'ok')
+        var result = send('train', { action:'togglef1', lokid: this.lokid });
+        if(result == 'ok')
         {
             //TODO: //FIXME: not securized since Intellibox could throw error
         }
         else
         {
+            console.log("[togglef1]:"+result);
             //TODO:
         }
     }
     toggleF2() {
-        if(send('train', { action:'togglef2', lokid: this.lokid }) == 'ok')
+        var result = send('train', { action:'togglef2', lokid: this.lokid });
+        if(result == 'ok')
         {
             //TODO: //FIXME: not securized since Intellibox could throw error
         }
         else
         {
+            console.log("[togglef2]:"+result);
             //TODO:
         }
     }
     toggleF3() {
-        if(send('train', { action:'togglef3', lokid: this.lokid }) == 'ok')
+        var result = send('train', { action:'togglef3', lokid: this.lokid });
+        if(result == 'ok')
         {
             //TODO: //FIXME: not securized since Intellibox could throw error
         }
         else
         {
+            console.log("[togglef3]:"+result);
             //TODO:
         }
     }
     toggleF4() {
-        if(send('train', { action:'togglef4', lokid: this.lokid }) == 'ok')
+        var result = send('train', { action:'togglef4', lokid: this.lokid });
+        if(result == 'ok')
         {
             //TODO: //FIXME: not securized since Intellibox could throw error
         }
         else
         {
+            console.log("[togglef4]:"+result);
             //TODO:
         }
     }
