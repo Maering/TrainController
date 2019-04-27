@@ -371,6 +371,8 @@ class SerialHandler:
         self.port.stopbits = STOPBITS_TWO
         self.port.timeout = 0.250  #seconds
         self.port.rtscts = True
+        self.port.xonxoff = True
+        self.port.dsrdtr = False
 
         # Open port
         self.port.open()
