@@ -15,6 +15,7 @@ class Controller:
         self.trains = {}
         SerialHandler.getInstance().connect('/dev/ttyUSB0')
         SerialHandler.getInstance().send('xZzA1')  # configure Intellibox
+        print(SerialHandler.getInstance().readline())
 
     def __register_new_lok__(self, name, lokAddress):
         ''' lokAddress is in base10
@@ -379,7 +380,7 @@ class SerialHandler:
 
     def send(self, payload):
         if self.port.isOpen():
-            data = (payload+"\n").encode('ascii')
+            data = (payload+" \n").encode('ascii')
             print(data)
             print(
                 str(self.port.port) +
@@ -398,6 +399,7 @@ class SerialHandler:
             print(output)
             return output
         else:
+            print("empty")
             return "empty"
 
 # The factory settings configure the Intellibox for an IBM compatible PC and
