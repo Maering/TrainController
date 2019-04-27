@@ -378,9 +378,14 @@ class SerialHandler:
         # Open port
         self.port.open()
 
+        self.port.rtscts = True
+        self.port.xonxoff = True
+        self.port.dsrdtr = False
+
     def send(self, payload):
         if self.port.isOpen():
             data = (payload+" \n").encode('iso-8859-1')
+            self.port.cts
             print(data)
             print(
                 str(self.port.port) +
@@ -396,7 +401,7 @@ class SerialHandler:
     def readline(self):
         bytesToRead = self.port.out_waiting
         if bytesToRead > 0:
-            output = self.port.read(bytesToRead)
+            output = self.port.read(bytesToRead).decode('iso-8859-1')
             print(output)
             return output
         else:
