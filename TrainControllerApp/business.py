@@ -381,9 +381,9 @@ class SerialHandler:
     def send(self, payload):
         if self.port.isOpen():
             data = (payload+" \n").encode('iso-8859-1')
-            print("CTS: " + self.port.rtscts)
-            print("XOO: " + self.port.xonxoff)
-            print("DSR: " + self.port.dsrdtr)
+            print("CTS: " + str(int(self.port.rtscts)))
+            print("XOO: " + str(int(self.port.xonxoff)))
+            print("DSR: " + str(int(self.port.dsrdtr)))
             print(data)
             print(
                 str(self.port.port) +
