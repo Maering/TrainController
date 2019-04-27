@@ -369,7 +369,7 @@ class SerialHandler:
         self.port.bitesize = EIGHTBITS
         self.port.parity = PARITY_NONE
         self.port.stopbits = STOPBITS_TWO
-        self.port.timeout = 0.250  #seconds
+        self.port.timeout = 0.250  # seconds
         self.port.rtscts = True
         self.port.xonxoff = True
         self.port.dsrdtr = False
@@ -379,7 +379,7 @@ class SerialHandler:
 
     def send(self, payload):
         if self.port.isOpen():
-            data = (payload+'\n').encode('ascii')
+            data = (payload+"\n").encode('ascii')
             print(data)
             print(
                 str(self.port.port) +
@@ -388,7 +388,7 @@ class SerialHandler:
                 " bytes written"
             )
             self.port.send_break()
-            self.port.flush()
+            self.port.reset_input_buffer()
         else:
             raise IOError
 
@@ -428,7 +428,6 @@ class P50XOrder:
         _instance = SerialHandler.getInstance()
         message = ' '.join(self.params)
         message = ' '.join([self.action, message])
-        message = message
         _instance.send(message)
 
     def __str__(self):
