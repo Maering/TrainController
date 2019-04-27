@@ -380,7 +380,7 @@ class SerialHandler:
 
     def send(self, payload):
         if self.port.isOpen():
-            data = (payload+" \n").encode('ascii')
+            data = (payload+" \n").encode('iso-8859-1')
             print(data)
             print(
                 str(self.port.port) +
@@ -394,8 +394,9 @@ class SerialHandler:
             raise IOError
 
     def readline(self):
-        if self.port.out_waiting > 0:
-            output = self.port.readline()
+        bytesToRead = self.port.out_waiting
+        if bytesToRead > 0:
+            output = self.port.read(bytesToRead)
             print(output)
             return output
         else:
